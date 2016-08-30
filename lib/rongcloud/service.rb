@@ -15,7 +15,7 @@ module Rongcloud
       @host = Rongcloud.config.host
       @sign_header = Rongcloud::Sign.sign_headers(@app_key, @app_secret)
 
-      $logger.warn "#{Time.now} a new rongcloud service is created, app key is #{@app_key}, app secret is #{@app_secret}, host is #{@host}, and sign header is #{@sign_header}"
+      $logger.debug "#{Time.now} a new rongcloud service is created, app key is #{@app_key}, app secret is #{@app_secret}, host is #{@host}, and sign header is #{@sign_header}"
     end
 
     ## 用户服务
@@ -27,12 +27,12 @@ module Rongcloud
         name: name,
         portraitUri: portrait_uri
       }
-      $logger.warn "#{Time.now} get_token params is #{params}"
+      $logger.debug "#{Time.now} get_token params is #{params}"
       res = RestClient.post(url, params, @sign_header){ |response, request, result, &block|
         handle_res(response, action = 'get_token')
       }
       # res = handle_res(res, action = 'get_token')
-      $logger.warn "#{Time.now} get_token response is #{res}"
+      $logger.debug "#{Time.now} get_token response is #{res}"
       be_symbolized res
     end
 
@@ -47,7 +47,7 @@ module Rongcloud
       rescue => e
         res = e.response.inspect
       end
-      $logger.warn "#{Time.now} refresh_user response is #{res}"
+      $logger.debug "#{Time.now} refresh_user response is #{res}"
       be_symbolized(res)
     end
 
@@ -207,7 +207,7 @@ module Rongcloud
       rescue => e
         res = e.response.body
       end
-      $logger.warn "#{Time.now} send_broadcast_msg response is #{res}"
+      $logger.debug "#{Time.now} send_broadcast_msg response is #{res}"
       be_symbolized res
     end
 
@@ -246,7 +246,7 @@ module Rongcloud
       rescue => e
         res = e.response.inspect
       end
-      $logger.warn "#{Time.now} sync_group response is #{res}"
+      $logger.debug "#{Time.now} sync_group response is #{res}"
       be_symbolized res
     end
 
@@ -260,7 +260,7 @@ module Rongcloud
       rescue => e
         res = e.response.inspect
       end
-      $logger.warn "#{Time.now} create_group response is #{res}"
+      $logger.debug "#{Time.now} create_group response is #{res}"
       be_symbolized res
     end
 
@@ -273,16 +273,16 @@ module Rongcloud
       RestClient.post(url, params, @sign_header){ |response, request, result, &block|
         case response.code
           when 200
-            $logger.warn "#{Time.now} add_group 200 is #{response}"
-            $logger.warn "#{Time.now} add_group 200 headers is #{response.headers}"
-            $logger.warn "#{Time.now} add_group 200 to_s is #{response.to_s}"
-            $logger.warn "#{Time.now} add_group 200 body is #{response.body}"
+            $logger.debug "#{Time.now} add_group 200 is #{response}"
+            $logger.debug "#{Time.now} add_group 200 headers is #{response.headers}"
+            $logger.debug "#{Time.now} add_group 200 to_s is #{response.to_s}"
+            $logger.debug "#{Time.now} add_group 200 body is #{response.body}"
             res = response
           when 400
-            $logger.warn "#{Time.now} add_group exception is #{response}"
-            $logger.warn "#{Time.now} add_group exception headers is #{response.headers}"
-            $logger.warn "#{Time.now} add_group exception to_s is #{response.to_s}"
-            $logger.warn "#{Time.now} add_group exception body is #{response.body}"
+            $logger.debug "#{Time.now} add_group exception is #{response}"
+            $logger.debug "#{Time.now} add_group exception headers is #{response.headers}"
+            $logger.debug "#{Time.now} add_group exception to_s is #{response.to_s}"
+            $logger.debug "#{Time.now} add_group exception body is #{response.body}"
             res = response
             # raise SomeCustomExceptionIfYouWant
           else
@@ -293,11 +293,11 @@ module Rongcloud
       # begin
       #   res = RestClient.post url, params, @sign_header
       # rescue => e
-      #   $logger.warn "#{Time.now} add_group exception is #{e}"
-      #   $logger.warn "#{Time.now} add_group exception is #{e.response}"
+      #   $logger.debug "#{Time.now} add_group exception is #{e}"
+      #   $logger.debug "#{Time.now} add_group exception is #{e.response}"
       #   res = e.response.inspect
       # end
-      $logger.warn "#{Time.now} add_group response is #{res}"
+      $logger.debug "#{Time.now} add_group response is #{res}"
       be_symbolized res
     end
 
@@ -310,7 +310,7 @@ module Rongcloud
       rescue => e
         res = e.response.inspect
       end
-      $logger.warn "#{Time.now} out_group response is #{res}"
+      $logger.debug "#{Time.now} out_group response is #{res}"
       be_symbolized res
     end
 
@@ -321,10 +321,10 @@ module Rongcloud
       begin
         res = RestClient.post url, params, @sign_header
       rescue => e
-        $logger.warn "#{Time.now} dismiss_group exception is #{e}"
+        $logger.debug "#{Time.now} dismiss_group exception is #{e}"
         res = e.response.inspect
       end
-      $logger.warn "#{Time.now} dismiss_group response is #{res}"
+      $logger.debug "#{Time.now} dismiss_group response is #{res}"
       be_symbolized res
     end
 
@@ -337,7 +337,7 @@ module Rongcloud
       rescue => e
         res = e.response.inspect
       end
-      $logger.warn "#{Time.now} refresh_group response is #{res}"
+      $logger.debug "#{Time.now} refresh_group response is #{res}"
       be_symbolized res
     end
 
@@ -394,19 +394,19 @@ module Rongcloud
         when 200
           response
         when 400
-          $logger.warn "#{Time.now} Get #{action} by rest-client is wrong, msg is #{response}"
+          $logger.debug "#{Time.now} Get #{action} by rest-client is wrong, msg is #{response}"
           { status: 400, code: :bad_request, msg: response }
         when 401
-          $logger.warn "#{Time.now} Get #{action} by rest-client is wrong, msg is #{response}"
+          $logger.debug "#{Time.now} Get #{action} by rest-client is wrong, msg is #{response}"
           { status: 401, code: :unauthorized, msg: response }
         when 403
-          $logger.warn "#{Time.now} Get #{action} by rest-client is wrong, msg is #{response}"
+          $logger.debug "#{Time.now} Get #{action} by rest-client is wrong, msg is #{response}"
           { status: 403, code: :forbidden, msg: response }
         when 404
-          $logger.warn "#{Time.now} Get #{action} by rest-client is wrong, msg is #{response}"
+          $logger.debug "#{Time.now} Get #{action} by rest-client is wrong, msg is #{response}"
           { status: 404, code: :not_found, msg: response }
         else
-          $logger.warn "#{Time.now} Get #{action} by rest-client is wrong, msg is #{response}"
+          $logger.debug "#{Time.now} Get #{action} by rest-client is wrong, msg is #{response}"
           { status: 500, code: :internal_server_error, msg: response }
       end
     end
@@ -418,8 +418,8 @@ module Rongcloud
         res_hash[:http_code] = res.code
       rescue => e
         res_hash = e.message
-        $logger.warn "#{Time.now} be_symbolized res is #{res}"
-        $logger.warn "#{Time.now} be_symbolized exception is #{e}"
+        $logger.debug "#{Time.now} be_symbolized res is #{res}"
+        $logger.debug "#{Time.now} be_symbolized exception is #{e}"
       end
       res_hash
     end
