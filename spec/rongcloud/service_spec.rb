@@ -89,6 +89,13 @@ describe Rongcloud::Service do
       expect(res_hash[:code]).to eq(200)
     end
 
+    it 'should send multiple sys msg' do
+      res_hash = @service.get_token('yang_three', 'yangyang3')
+      content = { content: 'hello', extra: 'helloExtra' }
+      res_hash = @service.send_sys_msg('yang', ['yang_two', 'yang_three'], 'RC:TxtMsg', content)
+      expect(res_hash[:code]).to eq(200)
+    end
+
     it 'should send a group msg' do
       pending 'Need to test send a group msg'
       fail
