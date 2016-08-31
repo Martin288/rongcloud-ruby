@@ -1,5 +1,6 @@
 require 'json'
 require 'active_support/core_ext/hash/keys'
+require 'active_support/core_ext/object/to_query'
 require 'rest-client'
 require 'logging'
 
@@ -152,15 +153,15 @@ module Rongcloud
     # 发送系统消息
     def send_sys_msg(from_uid, to_uid, msg_type, content, push_content = nil, push_data = nil)
       url = "#{@host}/message/system/publish.json"
+      to_user_id_query = [*to_uid].map{|userId| "toUserId=#{userId}"}.join("&")
       params = {
         fromUserId: from_uid,
-        toUserId: to_uid,
         objectName: msg_type,
         content: content.to_json
       }
       params.merge!({ pushContent: push_content }) unless push_content.nil?
       params.merge!({ pushData: push_data }) unless push_data.nil?
-      res = RestClient.post url, params, @sign_header
+      res = RestClient.post url, params.to_query.concat("&#{to_user_id_query}"), @sign_header
       be_symbolized res
     end
 
