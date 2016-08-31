@@ -7,7 +7,7 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'rongcloud', github: 'FlowerWrong/rongcloud-ruby'
+gem 'rongcloud', github: 'Martin288/rongcloud-ruby'
 ```
 
 And then execute:
