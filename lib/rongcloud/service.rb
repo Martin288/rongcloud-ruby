@@ -268,10 +268,11 @@ module Rongcloud
     # 加入群组
     def add_group(user_id, group_id, name = nil)
       url = "#{@host}/group/join.json"
-      params = { userId: user_id, groupId: group_id }
+      user_id_query = [*user_id].map{|userId| "userId=#{userId}"}.join("&")
+      params = { groupId: group_id }
       params.merge!({ groupName: name }) unless name.nil?
       res = nil
-      RestClient.post(url, params, @sign_header){ |response, request, result, &block|
+      RestClient.post(url, params.to_query.concat("&#{user_id_query}"), @sign_header){ |response, request, result, &block|
         case response.code
           when 200
             $logger.debug "#{Time.now} add_group 200 is #{response}"
